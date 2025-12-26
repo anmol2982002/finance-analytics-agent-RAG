@@ -1,4 +1,4 @@
-# 🤖 Finance Analytics Agent v2.0
+# 🤖 Finance Analytics Agent 
 
 An **AI-powered financial analytics agent** with RAG-enhanced chat, ML-backed suggestions, pattern recognition, and uncertainty-aware predictions. Pulls live data, runs quantitative models, and explains insights in natural language with interactive charts.
 
