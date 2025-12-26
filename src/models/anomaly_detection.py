@@ -130,33 +130,43 @@ class AnomalyDetector:
             feature_cols.append('volume_change')
         
         # Drop NaN values for training
-        feature_df = df[feature_cols].dropna()
+        feature_df = df[feature_cols].copy()
+        
+        # Replace infinity with NaN, then drop all NaN
+        feature_df = feature_df.replace([np.inf, -np.inf], np.nan)
+        feature_df = feature_df.dropna()
         
         if len(feature_df) < 20:
             df['is_anomaly_iforest'] = False
             return df
         
-        # Scale features
-        scaler = StandardScaler()
-        features_scaled = scaler.fit_transform(feature_df)
-        
-        # Fit Isolation Forest
-        iso_forest = IsolationForest(
-            contamination=self.isolation_contamination,
-            random_state=42,
-            n_estimators=100
-        )
-        
-        predictions = iso_forest.fit_predict(features_scaled)
-        
-        # Map predictions back to DataFrame
-        df['is_anomaly_iforest'] = False
-        df.loc[feature_df.index, 'is_anomaly_iforest'] = predictions == -1
-        
-        # Get anomaly scores
-        scores = iso_forest.score_samples(features_scaled)
-        df['anomaly_score'] = np.nan
-        df.loc[feature_df.index, 'anomaly_score'] = scores
+        try:
+            # Scale features
+            scaler = StandardScaler()
+            features_scaled = scaler.fit_transform(feature_df)
+            
+            # Fit Isolation Forest
+            iso_forest = IsolationForest(
+                contamination=self.isolation_contamination,
+                random_state=42,
+                n_estimators=100
+            )
+            
+            predictions = iso_forest.fit_predict(features_scaled)
+            
+            # Map predictions back to DataFrame
+            df['is_anomaly_iforest'] = False
+            df.loc[feature_df.index, 'is_anomaly_iforest'] = predictions == -1
+            
+            # Get anomaly scores
+            scores = iso_forest.score_samples(features_scaled)
+            df['anomaly_score'] = np.nan
+            df.loc[feature_df.index, 'anomaly_score'] = scores
+            
+        except Exception as e:
+            logger.warning(f"Isolation Forest failed: {e}")
+            df['is_anomaly_iforest'] = False
+            df['anomaly_score'] = np.nan
         
         return df
     
