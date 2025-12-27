@@ -15,7 +15,7 @@ An **AI-powered financial analytics agent** with RAG-enhanced chat, ML-backed su
 ## 🎬 Live Demo
 
 <p align="center">
-  <a href="YOUR_DRIVE_LINK_HERE">
+  <a href="https://drive.google.com/file/d/1z1jH-9KxhVnylffi2PhpvZUGbk5cof-Q/view?usp=sharing">
     <img src="https://img.shields.io/badge/▶️_Watch_Demo-Google_Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Watch Demo" />
   </a>
 </p>
